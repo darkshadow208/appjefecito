@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 font-sans antialiased;
+    min-height: 100vh;
+    /* Evita que se recargue arrastrando hacia abajo en el celular */
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Base styles for the bottom nav safe area */
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 5rem);
+}
