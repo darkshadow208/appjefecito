@@ -2,7 +2,7 @@ import { CalendarDays, PlusCircle, User, Clock, Settings } from 'lucide-react';
 
 export default function BottomNav({ activeTab, setActiveTab }) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 px-6 pb-6 pt-4 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent pointer-events-none flex justify-center z-50">
+    <div className="fixed bottom-0 left-0 right-0 px-4 pb-2 pt-4 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent pointer-events-none flex justify-center z-50">
       
       {/* Fondo del menú */}
       <div className="bg-slate-900 rounded-[2rem] px-2 py-2 flex items-center justify-between w-full max-w-sm shadow-2xl pointer-events-auto relative">

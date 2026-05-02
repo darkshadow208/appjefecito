@@ -176,6 +176,7 @@ function SecurityView() {
 
 function NotificationsView() {
   const [reminders, setReminders] = useState(false);
+  const [reminderTime, setReminderTime] = useState(localStorage.getItem('reminder_time') || '18:00');
   const [weeklySummary, setWeeklySummary] = useState(false);
 
   useEffect(() => {
@@ -191,29 +192,50 @@ function NotificationsView() {
     checkSchedule();
   }, []);
 
+  const scheduleNotification = async (timeStr) => {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    try {
+      // Cancelar previas
+      await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+      
+      // Programar nueva
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            title: "App Jefecito",
+            body: "¡No olvides registrar tus horas trabajadas de hoy!",
+            id: 1,
+            schedule: { on: { hour: hours, minute: minutes } },
+          }
+        ]
+      });
+    } catch (e) {
+      console.log('Error programando:', e);
+    }
+  };
+
   const toggleReminders = async () => {
     const newState = !reminders;
     setReminders(newState);
 
     try {
       if (newState) {
-        // Programar una notificación todos los días a las 6:00 PM (18:00)
-        await LocalNotifications.schedule({
-          notifications: [
-            {
-              title: "App Jefecito",
-              body: "¡No olvides registrar tus horas trabajadas de hoy!",
-              id: 1,
-              schedule: { on: { hour: 18, minute: 0 } },
-            }
-          ]
-        });
+        await scheduleNotification(reminderTime);
       } else {
-        // Cancelar la notificación
         await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
       }
     } catch (e) {
-      console.log('Error programando notificación:', e);
+      console.log('Error toggle:', e);
+    }
+  };
+
+  const handleTimeChange = async (e) => {
+    const newTime = e.target.value;
+    setReminderTime(newTime);
+    localStorage.setItem('reminder_time', newTime);
+    
+    if (reminders) {
+      await scheduleNotification(newTime);
     }
   };
 
@@ -221,12 +243,12 @@ function NotificationsView() {
     <div className="animate-in slide-in-from-right-8 fade-in duration-300">
       <h3 className="text-xl font-bold text-slate-800 mb-4">Preferencias</h3>
       
-      <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-2">
+      <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-2 space-y-2">
         
         <div className="p-4 flex items-center justify-between border-b border-slate-50">
           <div>
             <p className="font-bold text-slate-700">Recordatorio Diario</p>
-            <p className="text-xs text-slate-400 mt-0.5">Avisar a las 6:00 PM para registrar horas</p>
+            <p className="text-xs text-slate-400 mt-0.5">Notificación para registrar horas</p>
           </div>
           <button 
             onClick={toggleReminders}
@@ -235,6 +257,18 @@ function NotificationsView() {
             <div className={`w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform ${reminders ? 'translate-x-6' : 'translate-x-0'}`}></div>
           </button>
         </div>
+
+        {reminders && (
+          <div className="p-4 bg-slate-50 rounded-2xl mx-2 mb-2 flex items-center justify-between">
+            <span className="text-sm font-semibold text-slate-600">Hora del recordatorio</span>
+            <input 
+              type="time" 
+              value={reminderTime}
+              onChange={handleTimeChange}
+              className="bg-white px-3 py-1 rounded-lg border border-slate-200 font-bold text-slate-700 outline-none focus:border-emerald-500 transition-colors"
+            />
+          </div>
+        )}
 
         <div className="p-4 flex items-center justify-between">
           <div>

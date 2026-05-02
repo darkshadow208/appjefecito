@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
-import { Loader2, CheckCircle2 } from 'lucide-react';
+import { Loader2, CheckCircle2, X } from 'lucide-react';
 
-export default function LogEntryForm({ session, onLogAdded }) {
+export default function LogEntryForm({ session, onLogAdded, initialData, onCancelEdit }) {
   const [loading, setLoading] = useState(false);
-  const [logDate, setLogDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [isRestDay, setIsRestDay] = useState(false);
+  const [logDate, setLogDate] = useState(initialData?.log_date || format(new Date(), 'yyyy-MM-dd'));
+  const [startTime, setStartTime] = useState(initialData?.start_time?.substring(0, 5) || '08:00');
+  const [endTime, setEndTime] = useState(initialData?.end_time?.substring(0, 5) || '17:00');
+  const [isRestDay, setIsRestDay] = useState(initialData?.is_rest_day || false);
   const [msg, setMsg] = useState({ type: '', text: '' });
+
+  useEffect(() => {
+    if (initialData) {
+      setLogDate(initialData.log_date);
+      setStartTime(initialData.start_time?.substring(0, 5) || '08:00');
+      setEndTime(initialData.end_time?.substring(0, 5) || '17:00');
+      setIsRestDay(initialData.is_rest_day || false);
+    }
+  }, [initialData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +56,20 @@ export default function LogEntryForm({ session, onLogAdded }) {
   return (
     <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
       
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-lg font-bold text-slate-800">
+          {initialData ? 'Editar registro' : 'Nuevo registro'}
+        </h2>
+        {initialData && (
+          <button 
+            onClick={onCancelEdit}
+            className="p-2 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 transition-colors"
+          >
+            <X size={20} />
+          </button>
+        )}
+      </div>
+
       {msg.text && (
         <div className={`p-4 rounded-2xl mb-6 text-sm font-medium flex items-center ${msg.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
           {msg.type === 'success' && <CheckCircle2 className="w-5 h-5 mr-2" />}

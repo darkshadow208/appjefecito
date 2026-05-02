@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import { startOfMonth, endOfMonth, eachDayOfInterval, format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { calculateDailyBalance, formatMinutes } from '../utils/timeCalculations';
+import { Edit2 } from 'lucide-react';
 
-export default function MonthlyTable({ logs, currentMonth, loading }) {
+export default function MonthlyTable({ logs, currentMonth, loading, onEdit }) {
   const daysInMonth = useMemo(() => {
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
@@ -100,7 +101,14 @@ export default function MonthlyTable({ logs, currentMonth, loading }) {
       {/* Daily Cards List */}
       <div className="space-y-4">
         {monthData.rows.map((row) => (
-          <div key={row.dateStr} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+          <button 
+            key={row.dateStr} 
+            onClick={() => row.log && onEdit(row.log)}
+            disabled={!row.log}
+            className={`w-full text-left bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between transition-all ${
+              row.log ? 'hover:border-slate-300 active:scale-[0.98] cursor-pointer' : 'opacity-80 grayscale-[0.5]'
+            }`}
+          >
             <div className="flex items-center space-x-4">
               <div className={`w-12 h-12 rounded-xl flex flex-col justify-center items-center font-bold ${
                 row.status === 'favorable' ? 'bg-emerald-50 text-emerald-600' :
@@ -112,13 +120,16 @@ export default function MonthlyTable({ logs, currentMonth, loading }) {
                 <span className="text-lg leading-none">{format(row.date, 'dd')}</span>
               </div>
               
-              <div>
+              <div className="relative">
                 <p className="font-bold text-slate-800">
                   {row.status === 'empty' ? 'Falta registrar' : row.timeStr}
                 </p>
-                <p className="text-xs font-medium text-slate-400">
-                  {row.status === 'rest' ? 'Recuperación' : row.status === 'empty' ? 'Desconocido' : 'Horario Laboral'}
-                </p>
+                <div className="flex items-center space-x-1">
+                  <p className="text-xs font-medium text-slate-400">
+                    {row.status === 'rest' ? 'Recuperación' : row.status === 'empty' ? 'Desconocido' : 'Horario Laboral'}
+                  </p>
+                  {row.log && <Edit2 className="w-3 h-3 text-slate-300" />}
+                </div>
               </div>
             </div>
 
@@ -132,7 +143,7 @@ export default function MonthlyTable({ logs, currentMonth, loading }) {
                 {row.balanceStr}
               </span>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>

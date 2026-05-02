@@ -14,6 +14,7 @@ export default function Dashboard({ session, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [activeTab, setActiveTab] = useState('summary'); // 'summary', 'register', 'profile', 'history', 'settings'
+  const [editingData, setEditingData] = useState(null);
 
   const fetchLogs = async () => {
     setLoading(true);
@@ -39,10 +40,14 @@ export default function Dashboard({ session, onLogout }) {
   }, [currentMonth, session.user.id]);
 
   const handleLogAdded = (newLog) => {
-    const logDate = new Date(newLog.log_date);
-    if (logDate.getMonth() === currentMonth.getMonth() && logDate.getFullYear() === currentMonth.getFullYear()) {
-      fetchLogs();
-    }
+    // Siempre refrescamos para evitar problemas de zona horaria al comparar fechas
+    fetchLogs();
+    setEditingData(null); // Limpiar datos de edición tras guardar
+  };
+
+  const handleEdit = (log) => {
+    setEditingData(log);
+    setActiveTab('register');
   };
 
   return (
@@ -70,7 +75,15 @@ export default function Dashboard({ session, onLogout }) {
       <div className="px-6">
         {activeTab === 'register' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-            <LogEntryForm session={session} onLogAdded={handleLogAdded} />
+            <LogEntryForm 
+              session={session} 
+              onLogAdded={handleLogAdded} 
+              initialData={editingData}
+              onCancelEdit={() => {
+                setEditingData(null);
+                setActiveTab('summary');
+              }}
+            />
           </div>
         )}
 
@@ -81,6 +94,7 @@ export default function Dashboard({ session, onLogout }) {
               currentMonth={currentMonth} 
               setCurrentMonth={setCurrentMonth}
               loading={loading}
+              onEdit={handleEdit}
             />
           </div>
         )}
