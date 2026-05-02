@@ -12,6 +12,17 @@ function App() {
     // Solicitar permisos de notificación al iniciar la app (en Android)
     const requestPerms = async () => {
       try {
+        // Crear canal de notificaciones para Android 8+
+        await LocalNotifications.createChannel({
+          id: 'reminders',
+          name: 'Recordatorios Jefecito',
+          description: 'Notificaciones para registro de horas',
+          importance: 5, // 5 = High importance (makes noise and peek)
+          visibility: 1, // 1 = Public
+          sound: 'default',
+          vibration: true,
+        });
+
         const perms = await LocalNotifications.checkPermissions();
         if (perms.display !== 'granted') {
           await LocalNotifications.requestPermissions();

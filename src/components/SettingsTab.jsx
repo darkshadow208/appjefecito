@@ -205,13 +205,18 @@ function NotificationsView() {
             title: "App Jefecito",
             body: "¡No olvides registrar tus horas trabajadas de hoy!",
             id: 1,
+            channelId: 'reminders',
             schedule: { 
               on: { hour: hours, minute: minutes },
-              allowWhileIdle: true
+              repeats: true,
+              allowWhileIdle: true,
+              exact: true
             },
           }
         ]
       });
+      // Feedback visual para el usuario
+      alert(`¡Listo! Recordatorio programado todos los días a las ${timeStr}`);
     } catch (e) {
       console.log('Error programando:', e);
     }
