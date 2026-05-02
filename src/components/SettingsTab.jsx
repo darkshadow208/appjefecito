@@ -205,7 +205,10 @@ function NotificationsView() {
             title: "App Jefecito",
             body: "¡No olvides registrar tus horas trabajadas de hoy!",
             id: 1,
-            schedule: { on: { hour: hours, minute: minutes } },
+            schedule: { 
+              on: { hour: hours, minute: minutes },
+              allowWhileIdle: true
+            },
           }
         ]
       });
