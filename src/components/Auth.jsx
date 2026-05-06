@@ -6,6 +6,7 @@ export default function Auth({ onLogin }) {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -19,6 +20,11 @@ export default function Auth({ onLogin }) {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              full_name: fullName,
+            }
+          }
         });
         if (error) throw error;
         
@@ -58,10 +64,10 @@ export default function Auth({ onLogin }) {
       
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-slate-900 rounded-[2rem] mx-auto mb-6 shadow-2xl shadow-slate-300 flex items-center justify-center rotate-3 hover:rotate-0 transition-transform">
-            <span className="text-4xl">⏱️</span>
+          <div className="w-48 h-48 mx-auto mb-6 flex items-center justify-center transition-transform hover:scale-105">
+            <img src="/src/assets/logosinfondo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-xl" />
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">App Jefecito</h1>
+          <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Saoko Beach</h1>
           <p className="text-slate-500 font-medium">
             {isSignUp ? 'Empieza a controlar tus horas' : 'Bienvenido de vuelta'}
           </p>
@@ -75,6 +81,16 @@ export default function Auth({ onLogin }) {
 
         <form onSubmit={handleAuth} className="space-y-4">
           <div className="bg-white p-2 rounded-3xl shadow-sm border border-slate-100 flex flex-col space-y-2">
+            {isSignUp && (
+              <input
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
+                placeholder="Nombre y Apellido"
+              />
+            )}
             <input
               type="email"
               required

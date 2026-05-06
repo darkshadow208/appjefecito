@@ -15,11 +15,11 @@ export default function ProfileTab({ session }) {
         
         <div className="w-24 h-24 bg-gradient-to-tr from-slate-800 to-slate-900 rounded-full flex items-center justify-center shadow-xl mb-4 relative z-10">
           <span className="text-4xl text-white font-bold uppercase">
-            {user?.email?.charAt(0) || 'U'}
+            {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
           </span>
         </div>
         <h2 className="text-xl font-bold text-slate-800 relative z-10 truncate max-w-full">
-          Mi Perfil
+          {user?.user_metadata?.full_name || 'Mi Perfil'}
         </h2>
         <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-xs font-bold mt-2 relative z-10">
           Cuenta Activa

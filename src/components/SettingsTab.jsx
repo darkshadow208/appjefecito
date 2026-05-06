@@ -85,7 +85,7 @@ export default function SettingsTab({ onLogout }) {
             </button>
 
             <div className="mt-8 text-center">
-              <p className="text-xs font-bold text-slate-300 uppercase tracking-widest">App Jefecito</p>
+              <p className="text-xs font-bold text-slate-300 uppercase tracking-widest">Saoko Beach</p>
               <p className="text-xs font-medium text-slate-400 mt-1">Versión 1.0.0</p>
             </div>
           </div>
@@ -202,7 +202,7 @@ function NotificationsView() {
       await LocalNotifications.schedule({
         notifications: [
           {
-            title: "App Jefecito",
+            title: "Saoko Beach",
             body: "¡No olvides registrar tus horas trabajadas de hoy!",
             id: 1,
             channelId: 'reminders',
@@ -297,7 +297,7 @@ function NotificationsView() {
 }
 
 function SupportView() {
-  const supportEmail = "hola@appjefecito.com"; // Placeholder, the user can change this later
+  const supportEmail = "soporte@saokobeach.com"; // Updated support email placeholder
   const supportPhone = "+0000000000"; // Placeholder
 
   return (

@@ -1,12 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
-import { format } from 'date-fns';
+import { format, startOfMonth, endOfMonth, addMonths, subMonths, isSameMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { calculateDailyBalance, formatMinutes } from '../utils/timeCalculations';
+import { ChevronLeft, ChevronRight, Archive } from 'lucide-react';
 
 export default function HistoryTab({ session }) {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
 
   useEffect(() => {
     const fetchAllLogs = async () => {
@@ -26,17 +28,25 @@ export default function HistoryTab({ session }) {
     fetchAllLogs();
   }, [session.user.id]);
 
-  const { totalBalance, favorableMinutes, owedMinutes, recentLogs } = useMemo(() => {
+  const { totalBalance, favorableMinutes, owedMinutes, recentLogs, monthlySummary } = useMemo(() => {
     let totalMinutes = 0;
     let favMin = 0;
     let oweMin = 0;
     
+    // Monthly stats for selected month
+    let mTotal = 0;
+    let mFav = 0;
+    let mOwe = 0;
+
     const processedLogs = logs.map(log => {
       let status = 'empty';
       let balanceStr = 'Sin registro';
       let timeStr = '-';
       let balanceMinutes = 0;
       
+      const [y, m, d] = log.log_date.split('-').map(Number);
+      const isThisMonth = y === selectedMonth.getFullYear() && (m - 1) === selectedMonth.getMonth();
+
       if (log.is_rest_day) {
         status = 'rest';
         balanceStr = 'Día Libre';
@@ -52,6 +62,13 @@ export default function HistoryTab({ session }) {
         if (balanceMinutes > 0) favMin += balanceMinutes;
         if (balanceMinutes < 0) oweMin += balanceMinutes;
         
+        // Add to monthly summary if it matches
+        if (isThisMonth) {
+          mTotal += balanceMinutes;
+          if (balanceMinutes > 0) mFav += balanceMinutes;
+          if (balanceMinutes < 0) mOwe += balanceMinutes;
+        }
+
         timeStr = `${cleanStart || '?'} - ${cleanEnd || '?'}`;
         balanceStr = formatMinutes(calc.balanceMinutes);
         status = calc.status;
@@ -62,7 +79,7 @@ export default function HistoryTab({ session }) {
         status,
         balanceStr,
         timeStr,
-        dateObj: new Date(log.log_date)
+        dateObj: new Date(y, m - 1, d) // Fecha local real
       };
     });
 
@@ -70,9 +87,10 @@ export default function HistoryTab({ session }) {
       totalBalance: totalMinutes,
       favorableMinutes: favMin,
       owedMinutes: oweMin,
-      recentLogs: processedLogs.slice(0, 30) // Only show last 30 for performance in timeline
+      recentLogs: processedLogs.slice(0, 30),
+      monthlySummary: { total: mTotal, favorable: mFav, owed: mOwe }
     };
-  }, [logs]);
+  }, [logs, selectedMonth]);
 
   if (loading) {
     return (
@@ -90,7 +108,7 @@ export default function HistoryTab({ session }) {
         
         <div className="flex justify-between items-center mb-6">
           <div>
-            <p className="text-sm font-medium text-slate-400 mb-1">Balance Global</p>
+            <p className="text-sm font-medium text-slate-400 mb-1">Balance Histórico Total</p>
             <p className="text-3xl font-bold relative z-10">
               {formatMinutes(totalBalance)}
             </p>
@@ -104,12 +122,56 @@ export default function HistoryTab({ session }) {
 
         <div className="grid grid-cols-2 gap-4 border-t border-slate-700/50 pt-4 relative z-10">
           <div>
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Horas Extra</p>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1 text-emerald-400/80">Total Ganado</p>
             <p className="text-lg font-bold text-emerald-400">+{formatMinutes(favorableMinutes).replace('+', '')}</p>
           </div>
           <div>
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Horas que Debo</p>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1 text-rose-400/80">Total Debiendo</p>
             <p className="text-lg font-bold text-rose-400">-{formatMinutes(Math.abs(owedMinutes)).replace('+', '')}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Monthly Archive Section */}
+      <div className="mb-8">
+        <div className="flex items-center space-x-2 mb-4 px-2">
+          <Archive size={18} className="text-slate-400" />
+          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Archivo por Mes</h3>
+        </div>
+
+        <div className="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <button 
+              onClick={() => setSelectedMonth(subMonths(selectedMonth, 1))}
+              className="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <span className="font-bold text-slate-700 capitalize">
+              {format(selectedMonth, 'MMMM yyyy', { locale: es })}
+            </span>
+            <button 
+              onClick={() => setSelectedMonth(addMonths(selectedMonth, 1))}
+              className="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-emerald-50 p-4 rounded-2xl">
+              <p className="text-[10px] font-bold text-emerald-600 uppercase mb-1">A favor en {format(selectedMonth, 'MMM', { locale: es })}</p>
+              <p className="text-xl font-black text-emerald-700">+{formatMinutes(monthlySummary.favorable).replace('+', '')}</p>
+            </div>
+            <div className="bg-rose-50 p-4 rounded-2xl">
+              <p className="text-[10px] font-bold text-rose-600 uppercase mb-1">Deuda en {format(selectedMonth, 'MMM', { locale: es })}</p>
+              <p className="text-xl font-black text-rose-700">-{formatMinutes(Math.abs(monthlySummary.owed)).replace('+', '')}</p>
+            </div>
+          </div>
+          
+          <div className="mt-4 p-4 bg-slate-900 rounded-2xl flex justify-between items-center text-white">
+            <span className="text-xs font-bold uppercase text-slate-400">Balance del mes</span>
+            <span className="text-lg font-black">{formatMinutes(monthlySummary.total)}</span>
           </div>
         </div>
       </div>

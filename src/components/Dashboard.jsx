@@ -54,14 +54,20 @@ export default function Dashboard({ session, onLogout }) {
     <div className="min-h-screen bg-slate-50 pb-safe">
       {/* Mobile Top Header */}
       {activeTab !== 'profile' && activeTab !== 'history' && activeTab !== 'settings' && (
-        <header className="px-6 pt-10 pb-6 bg-slate-50 relative z-10">
+        <header className="px-6 pt-10 pb-6 bg-slate-50 relative z-10 flex justify-between items-start">
           <div>
+            <div className="flex items-center space-x-2 mb-1">
+              <span className="text-xl">👋</span>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">
+                ¡Hola, {session.user.user_metadata?.full_name?.split(' ')[0] || 'Jefe'}!
+              </p>
+            </div>
             <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
-              {activeTab === 'summary' ? 'Resumen' : 'Registrar'}
+              {activeTab === 'summary' ? 'Tu Resumen' : 'Registrar'}
             </h1>
-            <p className="text-sm font-bold text-slate-400 mt-1 uppercase tracking-wider">
-              {activeTab === 'summary' ? format(currentMonth, 'MMMM yyyy') : 'Nuevo Horario'}
-            </p>
+          </div>
+          <div className="w-20 h-20 -mt-2">
+            <img src="/src/assets/logosinfondo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
           </div>
         </header>
       )}

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">App Jefecito</string>
-    <string name="title_activity_main">App Jefecito</string>
+    <string name="app_name">Saoko Beach</string>
+    <string name="title_activity_main">Saoko Beach</string>
     <string name="package_name">com.appjefecito.tracker</string>
     <string name="custom_url_scheme">com.appjefecito.tracker</string>
 </resources>

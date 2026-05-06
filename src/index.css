@@ -13,3 +13,13 @@
 .pb-safe {
   padding-bottom: calc(env(safe-area-inset-bottom) + 5rem);
 }
+
+@theme {
+  --animate-progress-loading: progress-loading 2s ease-in-out infinite;
+
+  @keyframes progress-loading {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+  }
+}

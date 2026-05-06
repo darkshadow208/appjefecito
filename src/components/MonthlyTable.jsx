@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { startOfMonth, endOfMonth, eachDayOfInterval, format } from 'date-fns';
+import { startOfMonth, endOfMonth, eachDayOfInterval, format, addMonths, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { calculateDailyBalance, formatMinutes } from '../utils/timeCalculations';
-import { Edit2 } from 'lucide-react';
+import { Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function MonthlyTable({ logs, currentMonth, loading, onEdit }) {
+export default function MonthlyTable({ logs, currentMonth, setCurrentMonth, loading, onEdit }) {
   const daysInMonth = useMemo(() => {
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
@@ -68,6 +68,27 @@ export default function MonthlyTable({ logs, currentMonth, loading, onEdit }) {
 
   return (
     <div className="pb-8">
+      {/* Month Navigator Header */}
+      <div className="flex items-center justify-between mb-6 px-1">
+        <button 
+          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+          className="p-2 bg-white rounded-full shadow-sm border border-slate-100 text-slate-600 hover:bg-slate-50 active:scale-90 transition-all"
+        >
+          <ChevronLeft size={20} />
+        </button>
+        
+        <h2 className="text-xl font-extrabold text-slate-800 capitalize">
+          {format(currentMonth, 'MMMM yyyy', { locale: es })}
+        </h2>
+
+        <button 
+          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          className="p-2 bg-white rounded-full shadow-sm border border-slate-100 text-slate-600 hover:bg-slate-50 active:scale-90 transition-all"
+        >
+          <ChevronRight size={20} />
+        </button>
+      </div>
+
       {/* Total Card */}
       <div className="bg-slate-900 p-6 rounded-[2rem] shadow-xl shadow-slate-200 mb-6 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10"></div>

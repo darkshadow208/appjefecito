@@ -15,7 +15,7 @@ function App() {
         // Crear canal de notificaciones para Android 8+
         await LocalNotifications.createChannel({
           id: 'reminders',
-          name: 'Recordatorios Jefecito',
+          name: 'Recordatorios Saoko Beach',
           description: 'Notificaciones para registro de horas',
           importance: 5, // 5 = High importance (makes noise and peek)
           visibility: 1, // 1 = Public
@@ -49,8 +49,22 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6">
+        <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
+          <div className="w-60 h-60 mb-4 flex items-center justify-center">
+            <img 
+              src="/src/assets/logosinfondo.png" 
+              alt="Saoko Beach Logo" 
+              className="w-full h-full object-contain animate-pulse"
+            />
+          </div>
+          <h1 className="text-4xl font-black text-white tracking-tighter mb-2">
+            SAOKO BEACH
+          </h1>
+          <div className="w-12 h-1 bg-white/20 rounded-full overflow-hidden mt-4">
+            <div className="h-full bg-white animate-progress-loading w-full"></div>
+          </div>
+        </div>
       </div>
     );
   }
