@@ -3,6 +3,7 @@ import { supabase } from './lib/supabase';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import logo from './assets/logosinfondo.png';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -53,7 +54,7 @@ function App() {
         <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
           <div className="w-60 h-60 mb-4 flex items-center justify-center">
             <img 
-              src="/src/assets/logosinfondo.png" 
+              src={logo} 
               alt="Saoko Beach Logo" 
               className="w-full h-full object-contain animate-pulse"
             />

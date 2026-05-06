@@ -8,6 +8,7 @@ import HistoryTab from './HistoryTab';
 import SettingsTab from './SettingsTab';
 import { format } from 'date-fns';
 import { startOfMonth, endOfMonth } from 'date-fns';
+import logo from '../assets/logosinfondo.png';
 
 export default function Dashboard({ session, onLogout }) {
   const [logs, setLogs] = useState([]);
@@ -67,7 +68,7 @@ export default function Dashboard({ session, onLogout }) {
             </h1>
           </div>
           <div className="w-20 h-20 -mt-2">
-            <img src="/src/assets/logosinfondo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
+            <img src={logo} alt="Logo" className="w-full h-full object-contain drop-shadow-md" />
           </div>
         </header>
       )}

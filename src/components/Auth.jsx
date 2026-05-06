@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Loader2, ArrowRight } from 'lucide-react';
+import logo from '../assets/logosinfondo.png';
 
 export default function Auth({ onLogin }) {
   const [loading, setLoading] = useState(false);
@@ -65,7 +66,7 @@ export default function Auth({ onLogin }) {
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
           <div className="w-48 h-48 mx-auto mb-6 flex items-center justify-center transition-transform hover:scale-105">
-            <img src="/src/assets/logosinfondo.png" alt="Logo" className="w-full h-full object-contain drop-shadow-xl" />
+            <img src={logo} alt="Logo" className="w-full h-full object-contain drop-shadow-xl" />
           </div>
           <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Saoko Beach</h1>
           <p className="text-slate-500 font-medium">
