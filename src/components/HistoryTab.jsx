@@ -79,15 +79,18 @@ export default function HistoryTab({ session }) {
         status,
         balanceStr,
         timeStr,
+        isThisMonth, // Keep track of this
         dateObj: new Date(y, m - 1, d) // Fecha local real
       };
     });
+
+    const monthLogs = processedLogs.filter(log => log.isThisMonth);
 
     return { 
       totalBalance: totalMinutes,
       favorableMinutes: favMin,
       owedMinutes: oweMin,
-      recentLogs: processedLogs.slice(0, 30),
+      recentLogs: monthLogs, // Only show logs for the selected month
       monthlySummary: { total: mTotal, favorable: mFav, owed: mOwe }
     };
   }, [logs, selectedMonth]);
