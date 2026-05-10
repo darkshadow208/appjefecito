@@ -1,4 +1,4 @@
-import { CalendarDays, PlusCircle, User, Clock, Settings } from 'lucide-react';
+import { CalendarDays, PlusCircle, User, Clock, Settings, BarChart3 } from 'lucide-react';
 
 export default function BottomNav({ activeTab, setActiveTab }) {
   return (
@@ -11,16 +11,16 @@ export default function BottomNav({ activeTab, setActiveTab }) {
         <div className="flex-1 flex justify-around items-center">
           <button 
             onClick={() => setActiveTab('summary')}
-            className={`flex flex-col items-center justify-center w-12 h-12 transition-colors ${activeTab === 'summary' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+            className={`flex flex-col items-center justify-center w-10 h-10 transition-colors ${activeTab === 'summary' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
           >
-            <CalendarDays className="w-6 h-6" />
+            <CalendarDays className="w-5 h-5" />
           </button>
 
           <button 
             onClick={() => setActiveTab('profile')}
-            className={`flex flex-col items-center justify-center w-12 h-12 transition-colors ${activeTab === 'profile' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+            className={`flex flex-col items-center justify-center w-10 h-10 transition-colors ${activeTab === 'profile' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
           >
-            <User className="w-6 h-6" />
+            <User className="w-5 h-5" />
           </button>
         </div>
 
@@ -40,20 +40,27 @@ export default function BottomNav({ activeTab, setActiveTab }) {
           </div>
         </div>
 
-        {/* Lado Derecho (2 botones) */}
+        {/* Lado Derecho (3 botones) */}
         <div className="flex-1 flex justify-around items-center">
           <button 
             onClick={() => setActiveTab('history')}
-            className={`flex flex-col items-center justify-center w-12 h-12 transition-colors ${activeTab === 'history' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+            className={`flex flex-col items-center justify-center w-10 h-10 transition-colors ${activeTab === 'history' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
           >
-            <Clock className="w-6 h-6" />
+            <Clock className="w-5 h-5" />
+          </button>
+
+          <button 
+            onClick={() => setActiveTab('totals')}
+            className={`flex flex-col items-center justify-center w-10 h-10 transition-colors ${activeTab === 'totals' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+          >
+            <BarChart3 className="w-5 h-5" />
           </button>
 
           <button 
             onClick={() => setActiveTab('settings')}
-            className={`flex flex-col items-center justify-center w-12 h-12 transition-colors ${activeTab === 'settings' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+            className={`flex flex-col items-center justify-center w-10 h-10 transition-colors ${activeTab === 'settings' ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
           >
-            <Settings className="w-6 h-6" />
+            <Settings className="w-5 h-5" />
           </button>
         </div>
 

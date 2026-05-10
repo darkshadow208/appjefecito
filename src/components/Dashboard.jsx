@@ -6,6 +6,7 @@ import BottomNav from './BottomNav';
 import ProfileTab from './ProfileTab';
 import HistoryTab from './HistoryTab';
 import SettingsTab from './SettingsTab';
+import MonthlyTotalsTab from './MonthlyTotalsTab';
 import { format } from 'date-fns';
 import { startOfMonth, endOfMonth } from 'date-fns';
 import logo from '../assets/logosinfondo.png';
@@ -14,7 +15,7 @@ export default function Dashboard({ session, onLogout }) {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [activeTab, setActiveTab] = useState('summary'); // 'summary', 'register', 'profile', 'history', 'settings'
+  const [activeTab, setActiveTab] = useState('summary'); // 'summary', 'register', 'profile', 'history', 'totals', 'settings'
   const [editingData, setEditingData] = useState(null);
 
   const fetchLogs = async () => {
@@ -54,7 +55,7 @@ export default function Dashboard({ session, onLogout }) {
   return (
     <div className="min-h-screen bg-slate-50 pb-safe">
       {/* Mobile Top Header */}
-      {activeTab !== 'profile' && activeTab !== 'history' && activeTab !== 'settings' && (
+      {activeTab !== 'profile' && activeTab !== 'history' && activeTab !== 'totals' && activeTab !== 'settings' && (
         <header className="px-6 pt-10 pb-6 bg-slate-50 relative z-10 flex justify-between items-start">
           <div>
             <div className="flex items-center space-x-2 mb-1">
@@ -74,7 +75,7 @@ export default function Dashboard({ session, onLogout }) {
       )}
       
       {/* Spacer for tabs that hide the header to avoid jumping content under notch */}
-      {(activeTab === 'profile' || activeTab === 'history' || activeTab === 'settings') && (
+      {(activeTab === 'profile' || activeTab === 'history' || activeTab === 'totals' || activeTab === 'settings') && (
         <div className="pt-10 px-6"></div>
       )}
 
@@ -109,6 +110,8 @@ export default function Dashboard({ session, onLogout }) {
         {activeTab === 'profile' && <ProfileTab session={session} />}
         
         {activeTab === 'history' && <HistoryTab session={session} />}
+        
+        {activeTab === 'totals' && <MonthlyTotalsTab session={session} />}
         
         {activeTab === 'settings' && <SettingsTab onLogout={onLogout} />}
       </div>
