@@ -204,6 +204,13 @@ export default function HistoryTab({ session }) {
                     {log.timeStr}
                   </p>
                 </div>
+                {(log.chiringuito || log.tip_amount != null) && (
+                  <p className="text-sm text-slate-500 mt-2">
+                    {log.chiringuito ? `${log.chiringuito}` : ''}
+                    {log.chiringuito && log.tip_amount != null ? ' · ' : ''}
+                    {log.tip_amount != null ? `${Number(log.tip_amount).toFixed(2)}€ bote` : ''}
+                  </p>
+                )}
               </div>
 
               <div className="text-right pl-4 border-l border-slate-100">

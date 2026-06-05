@@ -23,6 +23,7 @@ export default function MonthlyTable({ logs, currentMonth, setCurrentMonth, load
       let status = 'empty';
       let balanceStr = 'Sin registro';
       let timeStr = '-';
+      let detailText = '';
       
       if (log) {
         if (log.is_rest_day) {
@@ -43,6 +44,11 @@ export default function MonthlyTable({ logs, currentMonth, setCurrentMonth, load
           balanceStr = formatMinutes(calc.balanceMinutes);
           status = calc.status;
         }
+
+        const parts = [];
+        if (log.chiringuito) parts.push(log.chiringuito);
+        if (log.tip_amount != null) parts.push(`${Number(log.tip_amount).toFixed(2)}€ bote`);
+        detailText = parts.join(' · ');
       }
       
       return {
@@ -51,6 +57,7 @@ export default function MonthlyTable({ logs, currentMonth, setCurrentMonth, load
         timeStr,
         balanceStr,
         status,
+        detailText,
         log
       };
     });
@@ -145,7 +152,10 @@ export default function MonthlyTable({ logs, currentMonth, setCurrentMonth, load
                 <p className="font-bold text-slate-800">
                   {row.status === 'empty' ? 'Falta registrar' : row.timeStr}
                 </p>
-                <div className="flex items-center space-x-1">
+                {row.detailText && (
+                  <p className="text-xs text-slate-400 mt-1">{row.detailText}</p>
+                )}
+                <div className="flex items-center space-x-1 mt-2">
                   <p className="text-xs font-medium text-slate-400">
                     {row.status === 'rest' ? 'Recuperación' : row.status === 'empty' ? 'Desconocido' : 'Horario Laboral'}
                   </p>

@@ -8,6 +8,8 @@ export default function LogEntryForm({ session, onLogAdded, initialData, onCance
   const [logDate, setLogDate] = useState(initialData?.log_date || format(new Date(), 'yyyy-MM-dd'));
   const [startTime, setStartTime] = useState(initialData?.start_time?.substring(0, 5) || '08:00');
   const [endTime, setEndTime] = useState(initialData?.end_time?.substring(0, 5) || '17:00');
+  const [chiringuito, setChiringuito] = useState(initialData?.chiringuito || 'Saoko');
+  const [tipAmount, setTipAmount] = useState(initialData?.tip_amount != null ? initialData.tip_amount.toString() : '0');
   const [isRestDay, setIsRestDay] = useState(initialData?.is_rest_day || false);
   const [msg, setMsg] = useState({ type: '', text: '' });
 
@@ -16,6 +18,8 @@ export default function LogEntryForm({ session, onLogAdded, initialData, onCance
       setLogDate(initialData.log_date);
       setStartTime(initialData.start_time?.substring(0, 5) || '08:00');
       setEndTime(initialData.end_time?.substring(0, 5) || '17:00');
+      setChiringuito(initialData.chiringuito || 'Saoko');
+      setTipAmount(initialData.tip_amount != null ? initialData.tip_amount.toString() : '0');
       setIsRestDay(initialData.is_rest_day || false);
     }
   }, [initialData]);
@@ -35,6 +39,8 @@ export default function LogEntryForm({ session, onLogAdded, initialData, onCance
             start_time: isRestDay ? null : startTime,
             end_time: isRestDay ? null : endTime,
             is_rest_day: isRestDay,
+            chiringuito: isRestDay ? null : chiringuito,
+            tip_amount: Number(tipAmount) || 0,
           },
           { onConflict: 'user_id, log_date' }
         )
@@ -129,6 +135,34 @@ export default function LogEntryForm({ session, onLogAdded, initialData, onCance
                 className="w-full bg-transparent text-purple-900 text-xl font-bold focus:outline-none"
               />
             </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Chiringuito</label>
+            <select
+              value={chiringuito}
+              onChange={(e) => setChiringuito(e.target.value)}
+              disabled={isRestDay}
+              className="w-full bg-transparent text-slate-800 text-lg font-semibold focus:outline-none"
+            >
+              <option value="Saoko">Saoko</option>
+              <option value="Kalima">Kalima</option>
+            </select>
+            {isRestDay && <p className="mt-2 text-xs text-slate-400">No aplica en días de descanso.</p>}
+          </div>
+          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Bote / Propina</label>
+            <input
+              type="number"
+              min="0"
+              step="0.5"
+              value={tipAmount}
+              onChange={(e) => setTipAmount(e.target.value)}
+              className="w-full bg-transparent text-slate-800 text-lg font-semibold focus:outline-none"
+            />
+            <p className="mt-2 text-xs text-slate-400">Si no hubo propina, deja 0.</p>
           </div>
         </div>
 
